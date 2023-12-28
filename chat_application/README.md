@@ -1,16 +1,11 @@
 # chat_application
 
-A new Flutter project.
+<img src = "https://github.com/hirenkhasatiya/chat_app/assets/121547143/ca1d37f7-d229-4ca5-8c68-84581a5e55f4" width = 300 >
+<img src = "https://github.com/hirenkhasatiya/chat_app/assets/121547143/9d6e4882-b45e-4980-a985-bb7b1f05d4e6" width = 300 >
+<img src = "https://github.com/hirenkhasatiya/chat_app/assets/121547143/bf7713f4-8426-4ca9-b8d6-8bc2da6a0d26" width = 300 >
+<img src = "https://github.com/hirenkhasatiya/chat_app/assets/121547143/b95186dd-631b-4799-95bf-c6a096e56cfc" width = 300 >
+<img src = "https://github.com/hirenkhasatiya/chat_app/assets/121547143/288e032d-337d-433f-af00-dab4c9a321c5" width = 300 >
+<img src = "https://github.com/hirenkhasatiya/chat_app/assets/121547143/6f069862-fe9f-4f87-bf1d-ae6cf27183e2" width = 300 >
+<img src = "https://github.com/hirenkhasatiya/chat_app/assets/121547143/ef1c777f-1e3f-45c6-9fec-b4eb4d283271" width = 300 >
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
