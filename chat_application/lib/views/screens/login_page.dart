@@ -124,7 +124,7 @@ class LoginPage extends StatelessWidget {
                         style: ButtonStyle(
                             foregroundColor: MaterialStateProperty.all(c4)),
                         onPressed: () {
-                          Navigator.of(context).pushNamed('/register');
+                          Navigator.of(context).pushNamed('register');
                         },
                         child: Text("Register User",
                             style: TextStyle(
@@ -207,38 +207,6 @@ class LoginPage extends StatelessWidget {
                   ],
                 ),
               ),
-            ),
-          ),
-          Align(
-            alignment: const Alignment(0.8, 0.95),
-            child: ElevatedButton.icon(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.white),
-                foregroundColor: MaterialStateProperty.all(c4),
-              ),
-              onPressed: () {
-                FbHelper.fbHelper.anonymousLogin().then((value) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Login Anonymously"),
-                      behavior: SnackBarBehavior.floating,
-                      backgroundColor: Colors.green,
-                    ),
-                  );
-                  Navigator.of(context)
-                      .pushReplacementNamed('/home', arguments: value);
-                }).onError((error, stackTrace) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Login Anonymously Failed"),
-                      behavior: SnackBarBehavior.floating,
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                });
-              },
-              icon: const Icon(Icons.login),
-              label: const Text("Guest Login"),
             ),
           ),
         ],
