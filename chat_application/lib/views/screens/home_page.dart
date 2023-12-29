@@ -1,11 +1,14 @@
 import 'dart:developer';
 import 'package:chat_application/Helpers/fb_helper.dart';
 import 'package:chat_application/Helpers/firestore_helper.dart';
+import 'package:chat_application/Modal/text_modal.dart';
 import 'package:chat_application/Modal/user_modal.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../Utils/colour_utils.dart';
+import '../../controllers/theme_controller.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -13,45 +16,71 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     User? user = FbHelper.fbHelper.firebaseAuth.currentUser;
+    ThemeController themeController = Get.find();
+    UserModal usr;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: c5,
+        foregroundColor: c4,
         title: Text("CHAT BOX",
             style: TextStyle(fontWeight: FontWeight.bold, color: c4)),
+        actions: [
+          Obx(() {
+            return IconButton(
+              onPressed: () {
+                themeController.changeTheme();
+              },
+              icon: Icon(
+                themeController.isDark.value
+                    ? Icons.light_mode
+                    : Icons.dark_mode_outlined,
+              ),
+            );
+          }),
+        ],
       ),
       drawer: Drawer(
         child: Column(
           children: [
-            UserAccountsDrawerHeader(
-              decoration: BoxDecoration(color: c5),
-              currentAccountPicture: CircleAvatar(
-                foregroundImage: NetworkImage(
-                  user?.photoURL ??
-                      "https://tse3.mm.bing.net/th?id=OIP.NS-EV3f9r1drh7h4Z6p9SAHaFC&pid=Api&P=0&h=180",
+            GestureDetector(
+              onTap: () =>
+                  Navigator.of(context).pushNamed('profile', arguments: user),
+              child: UserAccountsDrawerHeader(
+                decoration: BoxDecoration(color: c5),
+                currentAccountPicture: CircleAvatar(
+                  foregroundImage: NetworkImage(
+                    user?.photoURL ??
+                        "https://tse3.mm.bing.net/th?id=OIP.NS-EV3f9r1drh7h4Z6p9SAHaFC&pid=Api&P=0&h=180",
+                  ),
                 ),
+                accountName: Text(user?.displayName ?? "Unknown",
+                    style: TextStyle(
+                        color: c4, fontSize: 18, fontWeight: FontWeight.bold)),
+                accountEmail: Text(user?.email ?? "SIGN IN WITH EMAIL",
+                    style: TextStyle(color: c4)),
               ),
-              accountName: Text(user?.displayName ?? "Unknown",
-                  style: TextStyle(
-                      color: c4, fontSize: 18, fontWeight: FontWeight.bold)),
-              accountEmail: Text(user?.email ?? "SIGN IN WITH EMAIL",
-                  style: TextStyle(color: c4)),
             ),
-            TextButton.icon(
-              icon: Icon(Icons.logout, color: c4),
+            Spacer(),
+            ElevatedButton.icon(
+              style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(c5),
+                foregroundColor: MaterialStatePropertyAll(c4),
+              ),
+              icon: Icon(Icons.logout),
               onPressed: () {
                 FbHelper.fbHelper.logoutUser().then(
                     (value) => Navigator.of(context).pushReplacementNamed('/'));
               },
               label: Text(
                 "Log Out",
-                style: TextStyle(color: c4),
               ),
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: c4,
+        backgroundColor: (themeController.isDark == true) ? c5 : c4,
         foregroundColor: c1,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(
@@ -84,7 +113,7 @@ class HomePage extends StatelessWidget {
                       padding: const EdgeInsets.all(10),
                       itemCount: alluser.length,
                       itemBuilder: (context, index) {
-                        UserModal usr = alluser[index];
+                        usr = alluser[index];
                         return GestureDetector(
                           onTap: () {
                             showDialog(
@@ -128,7 +157,7 @@ class HomePage extends StatelessWidget {
                                 });
                           },
                           child: Card(
-                            color: c4,
+                            color: (themeController.isDark == true) ? c5 : c4,
                             child: ListTile(
                               textColor: Colors.white,
                               leading: CircleAvatar(
@@ -186,12 +215,121 @@ class HomePage extends StatelessWidget {
                                   Navigator.of(context)
                                       .pushNamed('chat', arguments: usermodal);
                                 },
-                                child: ListTile(
-                                  leading: CircleAvatar(
-                                      foregroundImage: NetworkImage(
-                                    usermodal.img,
-                                  )),
-                                  title: Text(usermodal.username),
+                                child: Card(
+                                  color: (themeController.isDark == true)
+                                      ? c5
+                                      : c4,
+                                  child: ListTile(
+                                    leading: CircleAvatar(
+                                        foregroundImage: NetworkImage(
+                                      usermodal.img,
+                                    )),
+                                    title: Text(usermodal.username,
+                                        style: TextStyle(
+                                          color:
+                                              (themeController.isDark == true)
+                                                  ? c4
+                                                  : c1,
+                                        )),
+                                    subtitle: StreamBuilder(
+                                      stream: FireStoreHelper.fireStoreHelper
+                                          .getLastMsg(
+                                              senderEmail: FbHelper
+                                                  .fbHelper
+                                                  .firebaseAuth
+                                                  .currentUser!
+                                                  .email
+                                                  .toString(),
+                                              receiverEmail: usermodal.email),
+                                      builder: (context, snapshot3) {
+                                        if (snapshot3.hasData) {
+                                          DocumentSnapshot<
+                                                  Map<String, dynamic>>? data =
+                                              snapshot3.data;
+
+                                          Map<String, dynamic>? data2 =
+                                              data!.data();
+
+                                          if (data2 != null) {
+                                            chatModal chat = chatModal.fromMap(
+                                              data: data2,
+                                            );
+
+                                            return Text(
+                                              chat.msj,
+                                              style: TextStyle(
+                                                color:
+                                                    (themeController.isDark ==
+                                                            true)
+                                                        ? c4
+                                                        : c1,
+                                              ),
+                                            );
+                                          } else {
+                                            return Text(
+                                              "Tap and chat",
+                                              style: TextStyle(
+                                                color:
+                                                    (themeController.isDark ==
+                                                            true)
+                                                        ? c4
+                                                        : c1,
+                                              ),
+                                            );
+                                          }
+                                        } else {
+                                          return CircularProgressIndicator();
+                                        }
+                                      },
+                                    ),
+                                    trailing: StreamBuilder(
+                                      stream: FireStoreHelper.fireStoreHelper
+                                          .getLastMsg(
+                                              senderEmail: FbHelper
+                                                  .fbHelper
+                                                  .firebaseAuth
+                                                  .currentUser!
+                                                  .email
+                                                  .toString(),
+                                              receiverEmail: usermodal.email),
+                                      builder: (context, snapshot3) {
+                                        if (snapshot3.hasData) {
+                                          DocumentSnapshot<
+                                                  Map<String, dynamic>>? data =
+                                              snapshot3.data;
+
+                                          Map<String, dynamic>? data2 =
+                                              data!.data();
+
+                                          if (data2 != null) {
+                                            chatModal chat = chatModal.fromMap(
+                                              data: data2,
+                                            );
+
+                                            return Text(
+                                              "${chat.time.hour % 12} : ${chat.time.minute}",
+                                              style: TextStyle(
+                                                color:
+                                                    (themeController.isDark ==
+                                                            true)
+                                                        ? c4
+                                                        : c1,
+                                              ),
+                                            );
+                                          } else {
+                                            return const Text(
+                                              "",
+                                              style: TextStyle(
+                                                color: Colors.black54,
+                                              ),
+                                            );
+                                          }
+                                        } else {
+                                          return CircularProgressIndicator();
+                                        }
+                                      },
+                                    ),
+                                  ),
                                 ),
                               );
                             } else {

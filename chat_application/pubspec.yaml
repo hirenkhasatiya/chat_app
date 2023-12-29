@@ -40,6 +40,8 @@ dependencies:
   cloud_firestore: ^4.13.6
   get: any
   google_sign_in: any
+  logger: ^2.0.2+1
+  flutter_slidable: ^3.0.1
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,7 @@
 import 'package:chat_application/Modal/text_modal.dart';
 import 'package:chat_application/Modal/user_modal.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:logger/logger.dart';
 
 class FireStoreHelper {
   FireStoreHelper._();
@@ -9,6 +10,7 @@ class FireStoreHelper {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   String userCollection = 'user';
+  String lM = "lastMsg";
 
   adduser({required UserModal user}) {
     firestore.collection(userCollection).doc(user.email).set(user.toMap);
@@ -90,6 +92,9 @@ class FireStoreHelper {
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getmessage(
       {required String senderemail, required String recieveremail}) {
+    Logger loigger = Logger();
+
+    loigger.i("Sender email : $senderemail // Reciever email:$recieveremail");
     return firestore
         .collection(userCollection)
         .doc(senderemail)
@@ -97,5 +102,63 @@ class FireStoreHelper {
         .doc("allchat")
         .collection("chatdata")
         .snapshots();
+  }
+
+  setLastMsg({
+    required chatModal chatModal,
+    required String senderEmail,
+    required String receiverEmail,
+  }) {
+    Map<String, dynamic> chat = chatModal.toMap;
+
+    chat.update("type", (value) => "sent");
+
+    firestore
+        .collection(userCollection)
+        .doc(senderEmail)
+        .collection(receiverEmail)
+        .doc(lM)
+        .set(chat);
+
+    chat.update("type", (value) => "receive");
+
+    firestore
+        .collection(userCollection)
+        .doc(receiverEmail)
+        .collection(senderEmail)
+        .doc(lM)
+        .set(chat);
+  }
+
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getLastMsg({
+    required String senderEmail,
+    required String receiverEmail,
+  }) {
+    return firestore
+        .collection(userCollection)
+        .doc(senderEmail)
+        .collection(receiverEmail)
+        .doc(lM)
+        .snapshots();
+  }
+
+  Future<void> deleteMsg({
+    required chatModal chatModal,
+    required String senderEmail,
+    required String receiverEmail,
+  }) async {
+    Map<String, dynamic> chat = chatModal.toMap;
+
+    chat.update("type", (value) => "sent");
+    chat.update("msg", (value) => "This message was deleted");
+
+    await firestore
+        .collection(userCollection)
+        .doc(senderEmail)
+        .collection(receiverEmail)
+        .doc("allChats")
+        .collection("chatData")
+        .doc(chatModal.time.millisecondsSinceEpoch.toString())
+        .update(chat);
   }
 }

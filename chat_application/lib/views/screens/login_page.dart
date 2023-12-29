@@ -172,16 +172,7 @@ class LoginPage extends StatelessWidget {
                       style: ButtonStyle(
                           foregroundColor: MaterialStateProperty.all(c4)),
                       onPressed: () async {
-                        await FbHelper.fbHelper.signInWithGoogle().then(
-                              (value) =>
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("Success........"),
-                                  behavior: SnackBarBehavior.floating,
-                                  backgroundColor: Colors.green,
-                                ),
-                              ),
-                            );
+                        await FbHelper.fbHelper.signInWithGoogle();
                         FireStoreHelper.fireStoreHelper.adduser(
                             user: UserModal(
                           id: FbHelper.fbHelper.firebaseAuth.currentUser!.uid
