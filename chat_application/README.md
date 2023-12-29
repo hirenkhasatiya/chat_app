@@ -8,5 +8,4 @@
 <img src = "https://github.com/hirenkhasatiya/chat_app/assets/121547143/6f069862-fe9f-4f87-bf1d-ae6cf27183e2" width = 300 >
 <img src = "https://github.com/hirenkhasatiya/chat_app/assets/121547143/dfc4f5fa-a18b-4045-b512-2a89a904b9bd" width = 300 >
 <img src = "https://github.com/hirenkhasatiya/chat_app/assets/121547143/723e579b-a8ae-4a3d-ad29-0b3354d224cb" width = 300 >
-<img src = "https://github.com/hirenkhasatiya/chat_app/assets/121547143/723e579b-a8ae-4a3d-ad29-0b3354d224cb" width = 300 >
 <img src = "https://github.com/hirenkhasatiya/chat_app/assets/121547143/d98efc79-6ea8-428a-a152-b02b67e1013f" width = 300 >
